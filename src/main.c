@@ -73,8 +73,8 @@ static struct beacon test_beacon_frame = {
 	.duration = 0X0000,
 	.da = {0XFF, 0XFF, 0XFF, 0XFF, 0XFF, 0XFF},
 	/* Transmitter Address: A0:69:60:E3:52:15 */
-	.sa = {0XDD, 0XEE, 0XAA, 0XDD, 0XBB, 0X01},
-	.bssid = {0XDD, 0XEE, 0XAA, 0XDD, 0XBB, 0X01},
+	.sa = {0XA0, 0X69, 0X60, 0XE3, 0X52, 0X15},
+	.bssid = {0XA0, 0X69, 0X60, 0XE3, 0X52, 0X15},
 	.seq_ctrl = 0X0001,
 	/* SSID: NRF_RAW_TX_AP1 */
 	.payload = {
@@ -110,15 +110,15 @@ static void flip_beacons(void) {
 
 	if (flag == 0) {
 		flag = 1;
-		test_beacon_frame.sa[5] = 0x01;
-		test_beacon_frame.bssid[5] = 0x01;
+		test_beacon_frame.sa[5] = 0x15;
+		test_beacon_frame.bssid[5] = 0x15;
 		test_beacon_frame.payload[27] = 0x31;
 		//LOG_ERR("Sending AP1 beacon frame");
 	} else {
 		flag = 0;
 		//LOG_ERR("Sending AP2 beacon frame");
-		test_beacon_frame.sa[5] = 0x02;
-		test_beacon_frame.bssid[5] = 0x02;
+		test_beacon_frame.sa[5] = 0x16;
+		test_beacon_frame.bssid[5] = 0x16;
 		test_beacon_frame.payload[27] = 0x32;
 	}
 }

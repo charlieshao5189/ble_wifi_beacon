@@ -23,15 +23,32 @@ Install NCS v2.9.1, put the repository folder under ncs\nrf\samples\wifi\ble_wif
 
 ## Build commands
 
+### nRF7002 DK
 ```
-nRF7002 DK - west build -b nrf7002dk/nrf5340/cpuapp -- -DCONFIG_RAW_TX_PKT_SAMPLE_NON_CONNECTED_MODE=y -DCONFIG_RAW_TX_PKT_SAMPLE_TX_MODE_CONTINUOUS=y -DCONFIG_RAW_TX_PKT_SAMPLE_INTER_FRAME_DELAY_MS=51
+west build -p -b nrf7002dk/nrf5340/cpuapp -- -DCONFIG_RAW_TX_PKT_SAMPLE_NON_CONNECTED_MODE=y -DCONFIG_RAW_TX_PKT_SAMPLE_TX_MODE_CONTINUOUS=y -DCONFIG_RAW_TX_PKT_SAMPLE_INTER_FRAME_DELAY_MS=51
 ```
+### nRF54L15 + nRF7002EB2
+```
+west build -p -b nrf54l15dk/nrf54l15/cpuapp -- -Dble_rawtx_SHIELD=nrf7002eb2 -Dble_rawtx_SNIPPET=nrf70-wifi -DCONFIG_RAW_TX_PKT_SAMPLE_NON_CONNECTED_MODE=y -DCONFIG_RAW_TX_PKT_SAMPLE_TX_MODE_CONTINUOUS=y -DCONFIG_RAW_TX_PKT_SAMPLE_INTER_FRAME_DELAY_MS=51
+```
+### Thingy91X
+To build for the Thingy:91 X using the nRF5340 as the host chip, use the ``thingy91x/nrf5340/cpuapp`` board target with the ``SB_CONFIG_THINGY91X_STATIC_PARTITIONS_NRF53_EXTERNAL_FLASH=y`` CMake option set.
+This requires an external debugger since the nRF9151 normally owns the buses.
+This special configuration is not compatible with nRF9151 firmware compiled for the default configuration.
+You need to erase the nRF9151 first to avoid conflicts.
+The following is an example of the CLI commands:
 
 ```
-nRF54L15 + nRF7002eb2 - west build -p -b nrf54l15dk/nrf54l15/cpuapp -- -Dble_rawtx_SHIELD=nrf7002eb2 -Dble_rawtx_SNIPPET=nrf70-wifi -DCONFIG_RAW_TX_PKT_SAMPLE_NON_CONNECTED_MODE=y -DCONFIG_RAW_TX_PKT_SAMPLE_TX_MODE_CONTINUOUS=y -DCONFIG_RAW_TX_PKT_SAMPLE_INTER_FRAME_DELAY_MS=51
+west build -p -b thingy91x/nrf5340/cpuapp -d build_thingy91x -- -DSB_CONFIG_THINGY91X_STATIC_PARTITIONS_NRF53_EXTERNAL_FLASH=y -DCONFIG_RAW_TX_PKT_SAMPLE_NON_CONNECTED_MODE=y -DCONFIG_RAW_TX_PKT_SAMPLE_TX_MODE_CONTINUOUS=y -DCONFIG_RAW_TX_PKT_SAMPLE_INTER_FRAME_DELAY_MS=51
+# Set SWD switch to nRF91 and check if you are connected to an nRF91:
+nrfjprog --deviceversion
+# If you see NRF9120_xxAA_REV3, proceed with erasing:
+nrfjprog --recover
+# Flip the SWD switch back to nRF53.
+nrfjprog --deviceversion
+# If you see NRF5340_xxAA_REV1, proceed with flashing:
+west flash --erase
 ```
-
-
 
 # Modify Wi-Fi beacon MAC addresses
 
